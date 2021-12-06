@@ -1,4 +1,0 @@
-/home/paws/FixRateDelayMeter/CMakeFiles/rebuild_cache.dir
-/home/paws/FixRateDelayMeter/CMakeFiles/edit_cache.dir
-/home/paws/FixRateDelayMeter/CMakeFiles/client.dir
-/home/paws/FixRateDelayMeter/CMakeFiles/server.dir
