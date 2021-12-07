@@ -163,32 +163,32 @@ acker.cc.s:
 	$(MAKE) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/acker.cc.s
 .PHONY : acker.cc.s
 
-client_fixRate.o: client_fixRate.cpp.o
+client.o: client.cpp.o
 
-.PHONY : client_fixRate.o
+.PHONY : client.o
 
 # target to build an object file
-client_fixRate.cpp.o:
-	$(MAKE) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/client_fixRate.cpp.o
-.PHONY : client_fixRate.cpp.o
+client.cpp.o:
+	$(MAKE) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/client.cpp.o
+.PHONY : client.cpp.o
 
-client_fixRate.i: client_fixRate.cpp.i
+client.i: client.cpp.i
 
-.PHONY : client_fixRate.i
+.PHONY : client.i
 
 # target to preprocess a source file
-client_fixRate.cpp.i:
-	$(MAKE) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/client_fixRate.cpp.i
-.PHONY : client_fixRate.cpp.i
+client.cpp.i:
+	$(MAKE) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/client.cpp.i
+.PHONY : client.cpp.i
 
-client_fixRate.s: client_fixRate.cpp.s
+client.s: client.cpp.s
 
-.PHONY : client_fixRate.s
+.PHONY : client.s
 
 # target to generate assembly for a file
-client_fixRate.cpp.s:
-	$(MAKE) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/client_fixRate.cpp.s
-.PHONY : client_fixRate.cpp.s
+client.cpp.s:
+	$(MAKE) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/client.cpp.s
+.PHONY : client.cpp.s
 
 payload.o: payload.cc.o
 
@@ -247,32 +247,32 @@ saturateservo.cc.s:
 	$(MAKE) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/saturateservo.cc.s
 .PHONY : saturateservo.cc.s
 
-serverFixTime.o: serverFixTime.cc.o
+server.o: server.cpp.o
 
-.PHONY : serverFixTime.o
+.PHONY : server.o
 
 # target to build an object file
-serverFixTime.cc.o:
-	$(MAKE) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/serverFixTime.cc.o
-.PHONY : serverFixTime.cc.o
+server.cpp.o:
+	$(MAKE) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/server.cpp.o
+.PHONY : server.cpp.o
 
-serverFixTime.i: serverFixTime.cc.i
+server.i: server.cpp.i
 
-.PHONY : serverFixTime.i
+.PHONY : server.i
 
 # target to preprocess a source file
-serverFixTime.cc.i:
-	$(MAKE) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/serverFixTime.cc.i
-.PHONY : serverFixTime.cc.i
+server.cpp.i:
+	$(MAKE) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/server.cpp.i
+.PHONY : server.cpp.i
 
-serverFixTime.s: serverFixTime.cc.s
+server.s: server.cpp.s
 
-.PHONY : serverFixTime.s
+.PHONY : server.s
 
 # target to generate assembly for a file
-serverFixTime.cc.s:
-	$(MAKE) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/serverFixTime.cc.s
-.PHONY : serverFixTime.cc.s
+server.cpp.s:
+	$(MAKE) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/server.cpp.s
+.PHONY : server.cpp.s
 
 socket.o: socket.cc.o
 
@@ -317,18 +317,18 @@ help:
 	@echo "... acker.o"
 	@echo "... acker.i"
 	@echo "... acker.s"
-	@echo "... client_fixRate.o"
-	@echo "... client_fixRate.i"
-	@echo "... client_fixRate.s"
+	@echo "... client.o"
+	@echo "... client.i"
+	@echo "... client.s"
 	@echo "... payload.o"
 	@echo "... payload.i"
 	@echo "... payload.s"
 	@echo "... saturateservo.o"
 	@echo "... saturateservo.i"
 	@echo "... saturateservo.s"
-	@echo "... serverFixTime.o"
-	@echo "... serverFixTime.i"
-	@echo "... serverFixTime.s"
+	@echo "... server.o"
+	@echo "... server.i"
+	@echo "... server.s"
 	@echo "... socket.o"
 	@echo "... socket.i"
 	@echo "... socket.s"

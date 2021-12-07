@@ -34,8 +34,6 @@ public:
 	 const int s_ack_id );
     void recv( void );
     void recv_noACK( void );
-    void recv_noACK_noRF( void );
-    void recv_1ms( void );
 
     void tick( void );
     void notify_config(bool);

@@ -28,86 +28,16 @@ Acker::Acker( const Socket & s_listen, const Socket & s_send, const Socket::Addr
     _nof_pkt(30000)
 {}
 
-void Acker::recv_1ms( void )
-{
-    if( (_nof_pkt > 0) && (_con_time_s > 0)){
-	printf("Nof pkt and connection time cannot be set simultaneously!\n");
-    }
-    if( (_nof_pkt == 0) && (_con_time_s == 0)){
-	printf("Nof_pkt and time are all zeros!\n");
-	_nof_pkt = 30000;
-    }
-    /* wait for incoming packet OR expiry of timer */
-    struct pollfd poll_fds[ 1 ];
-    poll_fds[ 0 ].fd = _listen.get_sock();
-    poll_fds[ 0 ].events = POLLIN;
-    struct timespec timeout;
-
-    FILE* FD;
-    FD = fopen("./data/client-ack-log","w+");
-    
-    _pkt_received = 0;
-    timeout.tv_sec = 1;
-    timeout.tv_nsec = 0;
-
-    uint64_t curr_time;
-    while ( 1 ) {
-	if(go_exit){
-	    printf("GO EXIT! RETURN\n\n");
-	    break;
-	}
-        fflush( NULL );
-	//printf("WHILE LOOPING! pkt_rcv:%d nof_pkt:%d\n", _pkt_received, _nof_pkt);
-        ppoll( poll_fds, 1, &timeout, NULL );
-
-        if ( poll_fds[ 0 ].revents & POLLIN ) {
-	    //printf("POLLIN\n");
-	    /* get the data packet */
-	    Socket::Packet incoming( _listen.recv() );
-	    SatPayload *contents = (SatPayload *) incoming.payload.data();
-	    contents->recv_timestamp = incoming.timestamp;
-
-	    _pkt_received += 1;
-	    int64_t oneway_ns = contents->recv_timestamp - contents->sent_timestamp;
-	    double oneway = oneway_ns / 1.e6;
-
-	    uint32_t sfx=0;
-	    //cc_buf_getSFX(ctl_ch_buf, &sfx);
-	    //curr_time = Socket::timestamp();
-	    if (_pkt_received % 100 == 0){ 
-		printf("Received %d packets with SeqNo: %d oneway delay:%.4f (ms) tti: %d\n",_pkt_received, contents->sequence_number, oneway, tti);
-	    }
-	    fprintf(FD,"%d\t %ld\t %ld\t %ld\t %.4f\t %d \n", contents->sequence_number, contents->sent_timestamp, contents->recv_timestamp, Socket::timestamp(), oneway, tti); 
-	    if( _nof_pkt > 0){
-		if( _pkt_received > _nof_pkt * _pkt_intval){
-		    printf("All packet received! EXIT!\n");
-		    //acker.tick_number(99999);
-		    RNTI_ID_DONE = 1;
-		    fclose(FD);
-		    return;
-		}
-	    }else if( _con_time_s > 0){
-		if(contents->CON_CLOSE){
-		    printf("Time is up! EXIT!\n");
-		    RNTI_ID_DONE = 1;
-		    fclose(FD);
-		    return;
-		}
-	    }
-	}
-    }
-    fclose(FD);
-    return;
-}
 void Acker::recv_noACK( void )
 {
     if( (_nof_pkt > 0) && (_con_time_s > 0)){
-	printf("Nof pkt and connection time cannot be set simultaneously!\n");
+	    printf("Nof pkt and connection time cannot be set simultaneously!\n");
     }
     if( (_nof_pkt == 0) && (_con_time_s == 0)){
-	printf("Nof_pkt and time are all zeros!\n");
-	_nof_pkt = 30000;
+        printf("Nof_pkt and time are all zeros!\n");
+        _nof_pkt = 30000;
     }
+
     /* wait for incoming packet OR expiry of timer */
     struct pollfd poll_fds[ 1 ];
     poll_fds[ 0 ].fd = _listen.get_sock();
@@ -115,85 +45,18 @@ void Acker::recv_noACK( void )
     struct timespec timeout;
 
     FILE* FD;
+    system("mkdir ./data");
+
     FD = fopen("./data/client-ack-log","w+");
-    
-    _pkt_received = 0;
-    timeout.tv_sec = 1;
-    timeout.tv_nsec = 0;
-
-    uint64_t curr_time;
-    while ( 1 ) {
-        if(go_exit){
-            printf("GO EXIT! RETURN\n\n");
-            break;
-        }
-        fflush( NULL );
-	    //printf("WHILE LOOPING! pkt_rcv:%d nof_pkt:%d\n", _pkt_received, _nof_pkt);
-        ppoll( poll_fds, 1, &timeout, NULL );
-
-        if ( poll_fds[ 0 ].revents & POLLIN ) {
-	    //printf("POLLIN\n");
-	    /* get the data packet */
-	    Socket::Packet incoming( _listen.recv() );
-	    SatPayload *contents = (SatPayload *) incoming.payload.data();
-	    contents->recv_timestamp = incoming.timestamp;
-
-	    _pkt_received += 1;
-	    int64_t oneway_ns = contents->recv_timestamp - contents->sent_timestamp;
-	    double oneway = oneway_ns / 1.e6;
-
-	    uint32_t sfx=0;
-	    //cc_buf_getSFX(ctl_ch_buf, &sfx);
-	    //curr_time = Socket::timestamp();
-	    
-	    if (_pkt_received % 100 == 0){ 
-		printf("Received %d packets with SeqNo: %d oneway delay:%.4f (ms) tti: %d\n",_pkt_received, contents->sequence_number, oneway, tti);
-	    }
-	    fprintf(FD,"%d\t %ld\t %ld\t %ld\t %.4f\t %d \n", contents->sequence_number, contents->sent_timestamp, contents->recv_timestamp, Socket::timestamp(), oneway, tti); 
-	    if( _nof_pkt > 0){
-		if( _pkt_received > _nof_pkt){
-		    printf("All packet received! EXIT!\n");
-		    //acker.tick_number(99999);
-		    RNTI_ID_DONE = 1;
-		    fclose(FD);
-		    return;
-		}
-	    }else if( _con_time_s > 0){
-		if(contents->CON_CLOSE){
-		    printf("Time is up! EXIT!\n");
-		    RNTI_ID_DONE = 1;
-		    fclose(FD);
-		    return;
-		}
-	    }
-	}
-    }
     fclose(FD);
-    return;
-}
 
-void Acker::recv_noACK_noRF( void )
-{
-    if( (_nof_pkt > 0) && (_con_time_s > 0)){
-	printf("Nof pkt and connection time cannot be set simultaneously!\n");
-    }
-    if( (_nof_pkt == 0) && (_con_time_s == 0)){
-	printf("Nof_pkt and time are all zeros!\n");
-	_nof_pkt = 30000;
-    }
-    /* wait for incoming packet OR expiry of timer */
-    struct pollfd poll_fds[ 1 ];
-    poll_fds[ 0 ].fd = _listen.get_sock();
-    poll_fds[ 0 ].events = POLLIN;
-    struct timespec timeout;
-
-    FILE* FD;
     FD = fopen("./data/client-ack-log","a+");
     
     _pkt_received = 0;
     timeout.tv_sec = 1;
     timeout.tv_nsec = 0;
 
+    notify_config(false);
     uint64_t curr_time;
     while ( 1 ) {
         if(go_exit){
@@ -205,39 +68,43 @@ void Acker::recv_noACK_noRF( void )
         ppoll( poll_fds, 1, &timeout, NULL );
 
         if ( poll_fds[ 0 ].revents & POLLIN ) {
-	    //printf("POLLIN\n");
-	    /* get the data packet */
-	    Socket::Packet incoming( _listen.recv() );
-	    SatPayload *contents = (SatPayload *) incoming.payload.data();
-	    contents->recv_timestamp = incoming.timestamp;
+            //printf("POLLIN\n");
+            /* get the data packet */
+            Socket::Packet incoming( _listen.recv() );
+            SatPayload *contents = (SatPayload *) incoming.payload.data();
+            contents->recv_timestamp = incoming.timestamp;
+            if(_remote == UNKNOWN){
+                printf("UNKNOWN remote\n");
+                _remote = incoming.addr;
+                notify_config(false);
+            }
+            _pkt_received += 1;
+            int64_t oneway_ns = contents->recv_timestamp - contents->sent_timestamp;
+            double oneway = oneway_ns / 1.e6;
 
-	    _pkt_received += 1;
-	    int64_t oneway_ns = contents->recv_timestamp - contents->sent_timestamp;
-	    double oneway = oneway_ns / 1.e6;
-
-	    uint32_t sfx=0;
-	    //cc_buf_getSFX(ctl_ch_buf, &sfx);
-	    //curr_time = Socket::timestamp();
-	    
-	    if (_pkt_received % 100 == 0){ 
-		printf("Received %d packets with SeqNo: %d oneway delay:%.4f (ms) tti:%d\n",_pkt_received, contents->sequence_number, oneway, tti);
-	    }
-	    fprintf(FD,"%d\t %ld\t %ld\t %ld\t %.4f\t %d \n", contents->sequence_number, contents->sent_timestamp, contents->recv_timestamp, Socket::timestamp(), oneway, tti); 
-	    if( _nof_pkt > 0){
-		if( _pkt_received > _nof_pkt){
-		    printf("All packet received! EXIT!\n");
-		    //acker.tick_number(99999);
-		    fclose(FD);
-		    return;
-		}
-	    }else if( _con_time_s > 0){
-		if(contents->CON_CLOSE){
-		    printf("Time is up! EXIT!\n");
-		    fclose(FD);
-		    return;
-		}
-	    }
-	}
+            uint32_t sfx=0;
+            //cc_buf_getSFX(ctl_ch_buf, &sfx);
+            //curr_time = Socket::timestamp();
+            
+            if (_pkt_received % 100 == 0){ 
+                printf("Received %d packets with SeqNo: %d oneway delay:%.4f (ms) tti:%d\n",_pkt_received, contents->sequence_number, oneway, tti);
+            }
+            fprintf(FD,"%d\t %ld\t %ld\t %ld\t %.4f\t %d \n", contents->sequence_number, contents->sent_timestamp, contents->recv_timestamp, Socket::timestamp(), oneway, tti); 
+            if( _nof_pkt > 0){
+                if( _pkt_received > _nof_pkt){
+                    printf("All packet received! EXIT!\n");
+                    //acker.tick_number(99999);
+                    fclose(FD);
+                    return;
+                }
+                }else if( _con_time_s > 0){
+                if(contents->CON_CLOSE){
+                    printf("Time is up! EXIT!\n");
+                    fclose(FD);
+                    return;
+                }
+            }
+        }
     }
     fclose(FD);
     return;

@@ -62,6 +62,8 @@ public:
   void tick_time();
   void tick_time_noClose();
 
+  void send();
+
   void set_con_time(int);
   void set_pkt_intval(int);
   int get_con_time(){

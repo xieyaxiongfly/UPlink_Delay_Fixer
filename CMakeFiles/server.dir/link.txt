@@ -1,0 +1,1 @@
+/usr/bin/c++      CMakeFiles/server.dir/server.cpp.o CMakeFiles/server.dir/saturateservo.cc.o CMakeFiles/server.dir/payload.cc.o CMakeFiles/server.dir/socket.cc.o  -o server -rdynamic 

@@ -1,6 +1,7 @@
 #include <assert.h>
 #include <math.h>
 #include <unistd.h>
+#include <poll.h>
 
 #include "saturateservo.hh"
 #include "socket.hh"
@@ -289,6 +290,45 @@ void SaturateServo::tick_time()
     _next_transmission_time = Socket::timestamp() + _transmission_interval;
     return;
 }
+
+void SaturateServo::send(){
+    /* wait for incoming packet OR expiry of timer */
+    struct pollfd poll_fds[ 1 ];
+    struct timespec timeout;
+    poll_fds[ 0 ].fd        = _send.get_sock(); 
+    poll_fds[ 0 ].events    = POLLIN;
+    timeout.tv_sec          = 0;
+    timeout.tv_nsec         = 50000000;
+
+    while ( 1 ) {
+        fflush( NULL );
+        ppoll( poll_fds, 1, &timeout, NULL );
+
+        if ( poll_fds[ 0 ].revents & POLLIN ) {
+            if(recv_noACK()){
+                printf("END of SEND pkt \n");
+                break;
+            }else{
+                if(_pkt_intval < 0 && _con_time_s){
+                    //The pkt interval is not set
+                    //printf("Tick now\n");
+                    tick_now();
+                }else{
+                    printf("Tick time\n");
+                    tick_time();
+                    reset_pkt_seq();
+                }
+            }
+        }else{
+            // TIME OUT, send packet 
+            //printf("Tick now\n");
+            tick_now();
+        }
+
+    }
+}
+
+
 void SaturateServo::tick_time_noClose()
 {
     uint64_t start_time, end_time;
