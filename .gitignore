@@ -1,7 +1,9 @@
 *.o
+*.cmake
+*.swp
+*.swo
 /client
 /server
 CMakeFiles/
-*.cmake
 CMakeCache.txt
 data/
