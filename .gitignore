@@ -1,7 +1,7 @@
 *.o
-./client
-./server
-./CMakeFiles
+/client
+/server
+CMakeFiles/
 *.cmake
 CMakeCache.txt
-./data
+data/
