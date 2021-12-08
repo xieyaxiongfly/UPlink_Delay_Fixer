@@ -200,7 +200,7 @@ void SaturateServo::tick( void )
 void SaturateServo::tick_now( void )
 {
     if ( _remote == UNKNOWN ) {
-        printf("unknwn remote\n");
+        //printf("unknwn remote\n");
 	    return;
     }
 
@@ -309,12 +309,12 @@ void SaturateServo::send(){
                 printf("END of SEND pkt \n");
                 break;
             }else{
-                if(_pkt_intval < 0 && _con_time_s){
+                if(_pkt_intval < 0 && _con_time_s < 0){
                     //The pkt interval is not set
                     //printf("Tick now\n");
                     tick_now();
                 }else{
-                    printf("Tick time\n");
+                    //printf("Tick time\n");
                     tick_time();
                     reset_pkt_seq();
                 }
