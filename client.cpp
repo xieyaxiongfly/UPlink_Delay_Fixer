@@ -79,7 +79,7 @@ int main(int argc, char *argv[]){
     acker.set_nof_pkt(nof_pkt);
 
     // start receving packets
-    acker.notify_config(false);
+    //acker.notify_config(false);
     acker.recv_noACK();
 
     close(client_socket.get_sock());

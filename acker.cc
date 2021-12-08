@@ -94,18 +94,21 @@ void Acker::recv_noACK( void )
                 if( _pkt_received > _nof_pkt){
                     printf("All packet received! EXIT!\n");
                     //acker.tick_number(99999);
-                    fclose(FD);
-                    return;
+                    //fclose(FD);
+                    //return;
+                    break;
                 }
-                }else if( _con_time_s > 0){
+            }else if( _con_time_s > 0){
                 if(contents->CON_CLOSE){
                     printf("Time is up! EXIT!\n");
-                    fclose(FD);
-                    return;
+                    //fclose(FD);
+                    //return;
+                    break;
                 }
             }
         }
     }
+    notify_config(true);
     fclose(FD);
     return;
 }

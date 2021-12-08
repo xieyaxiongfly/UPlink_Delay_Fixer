@@ -214,7 +214,7 @@ void SaturateServo::tick_now( void )
 
     _send.send( Socket::Packet( _remote, outgoing.str( 1400 ) ) );
 
-    printf( "DATA SENT  seq=%d, send_time=%ld, recv_time=%ld window:%d\n", outgoing.sequence_number, outgoing.sent_timestamp, outgoing.recv_timestamp, _window ); 
+    printf( "Tick-Sending HeartBeat seq=%d, send_time=%ld, recv_time=%ld window:%d\n", outgoing.sequence_number, outgoing.sent_timestamp, outgoing.recv_timestamp, _window ); 
 
     //_packets_sent++;
 
@@ -298,7 +298,7 @@ void SaturateServo::send(){
     struct timespec timeout;
     poll_fds[ 0 ].fd        = _send.get_sock(); 
     poll_fds[ 0 ].events    = POLLIN;
-    timeout.tv_sec          = 1;
+    timeout.tv_sec          = 2;
     timeout.tv_nsec         = 0;
 
     while ( 1 ) {
