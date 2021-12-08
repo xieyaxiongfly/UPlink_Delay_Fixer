@@ -245,6 +245,7 @@ void SaturateServo::tick_time()
     outgoing.oneway_ns = 0;
     outgoing.sender_id = _send_id;
     outgoing.CON_CLOSE = false;
+
     if( _nof_pkt > 0){
         printf("Packet number based transmission!\n");
         for( int i = 0; i < (int)(_nof_pkt + 200); i++){
@@ -297,8 +298,8 @@ void SaturateServo::send(){
     struct timespec timeout;
     poll_fds[ 0 ].fd        = _send.get_sock(); 
     poll_fds[ 0 ].events    = POLLIN;
-    timeout.tv_sec          = 0;
-    timeout.tv_nsec         = 50000000;
+    timeout.tv_sec          = 1;
+    timeout.tv_nsec         = 0;
 
     while ( 1 ) {
         fflush( NULL );
