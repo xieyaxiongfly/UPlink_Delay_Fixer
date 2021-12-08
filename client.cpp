@@ -52,10 +52,11 @@ int main(int argc, char *argv[]){
                 break;
             case 'p':
                 pkt_intval_us = atoi(argv[optind]);
+                break;
             default:
                 fprintf(stderr, "Usage: %s [-s serverIP] [-p pktInterval_in_us] [-n pktNum] [-t testTime]\n", argv[0]);
                 exit(EXIT_FAILURE);
-                break;
+                return 0;
         }
     }
     // bind the clent socket 
@@ -64,7 +65,6 @@ int main(int argc, char *argv[]){
     // setting up the server address
     Socket::Address server_address( UNKNOWN );
     server = false;
-    client_socket.bind( Socket::Address( "0.0.0.0", 9001 ) );
 
     if(serverIP){
         printf("ServerIP:%s\n",serverIP);

@@ -14,7 +14,7 @@ int main( int argc, char *argv[] )
 {
     int opt;
     int port = 9001; 
-    char* remoteIP;
+    char* remoteIP = NULL;
 
     while((opt = getopt(argc, argv, "r")) != -1){
         switch (opt){
@@ -37,8 +37,9 @@ int main( int argc, char *argv[] )
     // setting up the remote address
     Socket::Address remote_data_address(UNKNOWN);
     Socket::Address remote_feedback_address(UNKNOWN);
-
-    if(remoteIP){
+    
+     
+    if(remoteIP != NULL){
         remote_data_address = Socket::Address(remoteIP, port);
         remote_feedback_address = Socket::Address(remoteIP, port);
     }
