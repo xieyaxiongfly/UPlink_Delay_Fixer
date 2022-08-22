@@ -48,10 +48,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/paws/FixRateDelayMeter
+CMAKE_SOURCE_DIR = /home/alex/FixRateDelayMeter
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/paws/FixRateDelayMeter
+CMAKE_BINARY_DIR = /home/alex/FixRateDelayMeter
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -80,9 +80,9 @@ edit_cache/fast: edit_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/paws/FixRateDelayMeter/CMakeFiles /home/paws/FixRateDelayMeter/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/alex/FixRateDelayMeter/CMakeFiles /home/alex/FixRateDelayMeter/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/paws/FixRateDelayMeter/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/alex/FixRateDelayMeter/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -111,19 +111,6 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named client
-
-# Build rule for target.
-client: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 client
-.PHONY : client
-
-# fast build rule for target.
-client/fast:
-	$(MAKE) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/build
-.PHONY : client/fast
-
-#=============================================================================
 # Target rules for targets named server
 
 # Build rule for target.
@@ -135,6 +122,19 @@ server: cmake_check_build_system
 server/fast:
 	$(MAKE) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/build
 .PHONY : server/fast
+
+#=============================================================================
+# Target rules for targets named client
+
+# Build rule for target.
+client: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 client
+.PHONY : client
+
+# fast build rule for target.
+client/fast:
+	$(MAKE) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/build
+.PHONY : client/fast
 
 acker.o: acker.cc.o
 
@@ -196,8 +196,8 @@ payload.o: payload.cc.o
 
 # target to build an object file
 payload.cc.o:
-	$(MAKE) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/payload.cc.o
 	$(MAKE) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/payload.cc.o
+	$(MAKE) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/payload.cc.o
 .PHONY : payload.cc.o
 
 payload.i: payload.cc.i
@@ -206,8 +206,8 @@ payload.i: payload.cc.i
 
 # target to preprocess a source file
 payload.cc.i:
-	$(MAKE) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/payload.cc.i
 	$(MAKE) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/payload.cc.i
+	$(MAKE) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/payload.cc.i
 .PHONY : payload.cc.i
 
 payload.s: payload.cc.s
@@ -216,8 +216,8 @@ payload.s: payload.cc.s
 
 # target to generate assembly for a file
 payload.cc.s:
-	$(MAKE) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/payload.cc.s
 	$(MAKE) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/payload.cc.s
+	$(MAKE) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/payload.cc.s
 .PHONY : payload.cc.s
 
 saturateservo.o: saturateservo.cc.o
@@ -280,8 +280,8 @@ socket.o: socket.cc.o
 
 # target to build an object file
 socket.cc.o:
-	$(MAKE) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/socket.cc.o
 	$(MAKE) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/socket.cc.o
+	$(MAKE) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/socket.cc.o
 .PHONY : socket.cc.o
 
 socket.i: socket.cc.i
@@ -290,8 +290,8 @@ socket.i: socket.cc.i
 
 # target to preprocess a source file
 socket.cc.i:
-	$(MAKE) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/socket.cc.i
 	$(MAKE) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/socket.cc.i
+	$(MAKE) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/socket.cc.i
 .PHONY : socket.cc.i
 
 socket.s: socket.cc.s
@@ -300,8 +300,8 @@ socket.s: socket.cc.s
 
 # target to generate assembly for a file
 socket.cc.s:
-	$(MAKE) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/socket.cc.s
 	$(MAKE) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/socket.cc.s
+	$(MAKE) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/socket.cc.s
 .PHONY : socket.cc.s
 
 # Help Target
@@ -311,9 +311,9 @@ help:
 	@echo "... clean"
 	@echo "... depend"
 	@echo "... rebuild_cache"
+	@echo "... server"
 	@echo "... edit_cache"
 	@echo "... client"
-	@echo "... server"
 	@echo "... acker.o"
 	@echo "... acker.i"
 	@echo "... acker.s"

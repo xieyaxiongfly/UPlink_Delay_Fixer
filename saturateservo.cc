@@ -162,7 +162,8 @@ void SaturateServo::tick( void )
       outgoing.oneway_ns = 0;
       outgoing.sender_id = _send_id;
 
-      _send.send( Socket::Packet( _remote, outgoing.str( 1400 ) ) );
+      //_send.send( Socket::Packet( _remote, outgoing.str( 1400 ) ) );
+      _send.send( Socket::Packet( _remote, outgoing.str( 40 ) ) );
       
       printf( "DATA SENT  seq=%d, send_time=%ld, recv_time=%ld window:%d\n", outgoing.sequence_number, outgoing.sent_timestamp, outgoing.recv_timestamp, _window ); 
 
@@ -221,6 +222,57 @@ void SaturateServo::tick_now( void )
     //_next_transmission_time = Socket::timestamp() + _transmission_interval;
 }
 
+void SaturateServo::tick_time_w_file()
+{
+    uint64_t start_time, end_time;
+    uint64_t begin_time;
+    float time_passed_s;
+    if ( _remote == UNKNOWN ) {
+	printf("Remote is unknown!\n");
+	return;
+    }
+    
+    printf("Transmitting according to files\n");
+    SatPayload outgoing;
+    outgoing.ack_number = -1;
+    outgoing.recv_timestamp = 0;
+    outgoing.oneway_ns = 0;
+    outgoing.sender_id = _send_id;
+    outgoing.CON_CLOSE = false;
+
+    FILE *fp;
+    if((fp=fopen("sending_interval.txt","r"))==NULL){
+        printf("Open the file failure...\n");
+        exit(0);
+    }
+
+    int PKT_SIZE = 46;
+    char buf[100];
+    uint64_t last_time = Socket::timestamp();
+    uint64_t curr_time = 0;
+    uint64_t interval;
+    while(fgets(buf, 100, fp)){
+	sscanf(buf, "%ld",&interval); 
+        printf("Packet sent interval:%d\n", interval);
+	outgoing.sequence_number = _packets_sent;
+	start_time = Socket::timestamp();
+	outgoing.sent_timestamp = start_time;
+	_send.send( Socket::Packet( _remote, outgoing.str( PKT_SIZE ) ) );
+	//printf( "DATA SENT  seq=%d, send_time=%ld, recv_time=%ld window:%d\n",  
+        //		outgoing.sequence_number, outgoing.sent_timestamp, outgoing.recv_timestamp, _window ); 
+	_packets_sent++;
+	while(true){
+		curr_time = Socket::timestamp();
+		if(curr_time - last_time > interval ){
+		    last_time = curr_time;    
+		    break;
+		}
+	}
+   }
+   fclose(fp);
+   return;
+}
+     
 void SaturateServo::tick_time()
 {
     uint64_t start_time, end_time;
@@ -246,13 +298,14 @@ void SaturateServo::tick_time()
     outgoing.sender_id = _send_id;
     outgoing.CON_CLOSE = false;
 
+    int PKT_SIZE = 40;
     if( _nof_pkt > 0){
         printf("Packet number based transmission!\n");
         for( int i = 0; i < (int)(_nof_pkt + 200); i++){
             outgoing.sequence_number = _packets_sent;
             start_time = Socket::timestamp();
             outgoing.sent_timestamp = start_time;
-            _send.send( Socket::Packet( _remote, outgoing.str( 1400 ) ) );
+            _send.send( Socket::Packet( _remote, outgoing.str( PKT_SIZE ) ) );
             //printf( "DATA SENT  seq=%d, send_time=%ld, recv_time=%ld window:%d\n", outgoing.sequence_number, outgoing.sent_timestamp, outgoing.recv_timestamp, _window ); 
             _packets_sent++;
             while(true){
@@ -273,11 +326,11 @@ void SaturateServo::tick_time()
                 printf("Time is up!\n"); 
                 outgoing.CON_CLOSE = true;
                 usleep(100000);
-                _send.send( Socket::Packet( _remote, outgoing.str( 1400 ) ) );
+                _send.send( Socket::Packet( _remote, outgoing.str( PKT_SIZE ) ) );
                 break;
             }else{
                 outgoing.sent_timestamp = start_time;
-                _send.send( Socket::Packet( _remote, outgoing.str( 1400 ) ) );
+                _send.send( Socket::Packet( _remote, outgoing.str( PKT_SIZE ) ) );
                 //printf( "DATA SENT  seq=%d, send_time=%ld, recv_time=%ld window:%d\n", outgoing.sequence_number, outgoing.sent_timestamp, outgoing.recv_timestamp, _window ); 
                 _packets_sent++;
                 while(true){
@@ -317,6 +370,7 @@ void SaturateServo::send(){
                 }else{
                     //printf("Tick time\n");
                     tick_time();
+		    //tick_time_w_file();
                     reset_pkt_seq();
                 }
             }

@@ -60,6 +60,7 @@ public:
   void tick( void );
   void tick_now( void );
   void tick_time();
+  void tick_time_w_file();
   void tick_time_noClose();
 
   void send();
