@@ -89,7 +89,9 @@ void Acker::recv_noACK( void )
             if (_pkt_received % 100 == 0){ 
                 printf("Received %d packets with SeqNo: %d oneway delay:%.4f (ms) tti:%d\n",_pkt_received, contents->sequence_number, oneway, tti);
             }
+
             fprintf(FD,"%d\t %ld\t %ld\t %ld\t %.4f\t %d \n", contents->sequence_number, contents->sent_timestamp, contents->recv_timestamp, Socket::timestamp(), oneway, tti); 
+
             if( _nof_pkt > 0){
                 if( _pkt_received > _nof_pkt){
                     printf("All packet received! EXIT!\n");

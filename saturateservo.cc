@@ -304,15 +304,25 @@ void SaturateServo::tick_time()
         for( int i = 0; i < (int)(_nof_pkt + 200); i++){
             outgoing.sequence_number = _packets_sent;
             start_time = Socket::timestamp();
-            outgoing.sent_timestamp = start_time;
-            _send.send( Socket::Packet( _remote, outgoing.str( PKT_SIZE ) ) );
-            //printf( "DATA SENT  seq=%d, send_time=%ld, recv_time=%ld window:%d\n", outgoing.sequence_number, outgoing.sent_timestamp, outgoing.recv_timestamp, _window ); 
-            _packets_sent++;
+			for(int j = 0; j<1; j++){
+				outgoing.sent_timestamp = start_time;
+				_send.send( Socket::Packet( _remote, outgoing.str( PKT_SIZE ) ) );
+				//printf( "DATA SENT  seq=%d, send_time=%ld, recv_time=%ld window:%d\n", outgoing.sequence_number, outgoing.sent_timestamp, outgoing.recv_timestamp, _window ); 
+				_packets_sent++;
+			}
+			int rand_t = (rand() % 200 ) * 1000; 
+			//int rand_t = 0;
+			//printf("rand_t:%d \n", rand_t);
+
             while(true){
+			 // random time slot in ns
              end_time = Socket::timestamp();
-             if(end_time - start_time > (uint64_t) _pkt_intval * 1000)
+             if(end_time - start_time > (uint64_t) _pkt_intval * 1000 + rand_t)
                 break;
             }
+			if(_packets_sent % 200 == 0){
+				usleep(10000);
+			}
         }
     }else if(_con_time_s > 0){
         printf("Time based transmission!\n");
@@ -370,7 +380,7 @@ void SaturateServo::send(){
                 }else{
                     //printf("Tick time\n");
                     tick_time();
-		    //tick_time_w_file();
+		    		//tick_time_w_file();
                     reset_pkt_seq();
                 }
             }

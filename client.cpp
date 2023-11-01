@@ -59,6 +59,7 @@ int main(int argc, char *argv[]){
                 return 0;
         }
     }
+
     // bind the clent socket 
     client_socket.bind( Socket::Address( "0.0.0.0", 9001 ) );
 
